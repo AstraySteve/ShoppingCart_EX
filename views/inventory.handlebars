@@ -1,0 +1,65 @@
+{{#each inventory}}
+    <li>
+        <p class="product_name" data-num="{{this.id}}">{{this.product_name}}</p>
+        <button id="deleteButton_{{this.id}}" data-num="{{this.id}}">X</button>
+    </li>
+{{/each}}
+
+<input id='newItem' type="text"><button id="addButton">+</button>
+
+<script>
+    $('body').on('dblclick', ".product_name", function(){
+        var textValue = $(this).text();
+        var index = $(this).data('num')
+        $(this).replaceWith( `<input type='text' value="${textValue}"/>` );
+        $(`#deleteButton_${index}`).text('+').attr('id',`updateButton_${index}`).addClass('updateButton');
+    });
+
+    $('li').on('click', '.updateButton', function(){
+        var id = $(this).data('num');
+        var inputVal = $(this).parent().find("input").val();
+        console.log(inputVal);
+        $.ajax({
+            method: "PUT",
+            url: `/api/inventory/${id}`,
+            headers:{
+                "Accept": "application/json",
+                "Content-Type":"application/json"
+            },
+            data: JSON.stringify{
+                name: inputVal
+            }
+        });
+    });
+
+    //HOMEWORK: now to revert this textbox back into a textfield, think about the implication and reprucussion of each method
+
+    $('body').on('click', '#deleteButton', function()
+    {
+        var id = $(this).data('num');
+        console.log("Delete button clicked on " + id);
+        $.ajax({
+            method: "DELETE",
+            url: `/api/inventory/${id}`
+        });
+    });
+
+    $('body').on('click', '#addButton', () => {
+        let value = $("#newItem").val();
+
+        $.ajax({
+            method: "POST", 
+            url: "/api/inventory",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                name: value, 
+                description: "This is the best new hat on the market", 
+                price: 1.00,                    
+                cost: 0.50
+            })
+        })
+    });
+</script>
