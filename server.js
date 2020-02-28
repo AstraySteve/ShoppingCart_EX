@@ -1,11 +1,13 @@
 var http = require('http'); //npm built in
 var fs = require('fs');
-var db = require('./db');
+//var db = require('./db'); //use if not using sequelize
+var db = require('./models'); //sequelize method
 var express = require('express');
 var cors = require('cors');
 var path = require('path');
 var bodyParser = require('body-parser');
 var handlebars = require('express-handlebars');
+
 
 var app = express();
 
@@ -64,6 +66,15 @@ app.get('/portfolio', (request, response)=>{
 });
 
 app.get('/inventory', (req, res)=>{
+
+    db.Inventory.findAll({}).then(data=>{
+        res.render('inventory', {
+            inventory: data,
+            javascriptSources: [`https://code.jquery.com/jquery-3.3.1.min.js`]
+        });
+    });
+
+    /*//non sequelize method
     connection.query(`SELECT * FROM inventory`, (err, data)=>{
         if(err){
             throw err;
@@ -72,7 +83,7 @@ app.get('/inventory', (req, res)=>{
             inventory: data,
             javascriptSources: [`https://code.jquery.com/jquery-3.3.1.min.js`]
         });
-    });
+    });*/
 });
 
 //API method
@@ -131,8 +142,8 @@ app.put('/', (req, res)=>{
 
 app.listen(port, ()=> {
     console.log(`Connected on port: ${port}`);
-    connection = db.login();
-    connection.connect();
+    //connection = db.login();
+    //connection.connect();
 });
 
 

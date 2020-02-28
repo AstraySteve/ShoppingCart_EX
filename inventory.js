@@ -1,3 +1,5 @@
+//This version of inventory.js is using non sequelize approach
+//File is not needed if using sequelize
 var db = require("./db");
 
 var command = process.argv[2];

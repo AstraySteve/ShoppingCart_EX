@@ -2,11 +2,11 @@ var mysql = require("mysql");
 
 function login() {
     return mysql.createConnection({
-        host: "localhost", //127.0.0.1 ip address
-        user: "root",
-        password: "root",
+        host: process.env.DBHOST || "localhost", //127.0.0.1 ip address
+        user: process.env.DBUSER || "root",
+        password: process.env.DBPASSWORD || "root",
         port: 3306, //3306 default port, (optional unless you are using a different port)
-        database: "hat_store",
+        database: process.env.DB || "hat_store",
         multipleStatements: true
     });
 }
